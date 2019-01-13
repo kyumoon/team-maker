@@ -1,3 +1,42 @@
+@import url(http://cdn.jsdelivr.net/font-nanum/1.0/nanumbarungothic/nanumbarungothic.css);
+
+*{
+  /* border:1px solid red; */
+  list-style: none;
+  margin:0;
+  padding:0;
+  border-radius: 5px;
+  font-family: 'Nanum Barun Gothic';
+  font-weight: 400;
+}
+
+header{
+  margin-top: 7px;
+}
+
+.vertical-buttons input, .vertical-buttons button{
+  display: block;
+  width: 90%;
+  margin: 1px auto;
+  padding: 3px;
+}
+
+.vertical-buttons button{
+  margin-top:3px;
+  background-color: rgb(218, 218, 218);
+}
+
+.team{
+  border: 1px solid rgb(77, 75, 75);
+  width:90%;
+  margin: 5px auto;
+  /* margin-top: 5px; */
+}
+
+.team li{
+  padding: 1px 0;
+}
+
 .App {
   text-align: center;
 }
