@@ -1,74 +1,53 @@
 import * as React from 'react';
 import Team from './Team';
+import {Member} from '../store/TeamStore'
+import {inject, observer} from 'mobx-react'
+// import TeamStore from '../store/TeamStore'
 
-interface Member{
-    name:string,
-    score:string,
-}
 interface Props{
-    memberList:Array<Member>,
     teamCount:string,
-    initAll:Function
+    initAll:Function,
 }
 
+@inject('store')
+@observer
 class TeamBaord extends React.Component<Props,any>{
-
+    //@ts-ignore
+    store = this.props.store;
     constructor(props:Props){
         super(props);
-        this.state={
-            isTeamMaken : false,
-            randomTeam:[]
-        }
     }
 
     render(){
-        let memberList = this.props.memberList.map((item,index)=>{
-            return <div key={index}>{item.name}/{item.score}</div>
+        let memberList = this.store.memberList.map((item:Member,index:number)=>{
+            return <div className="member" key={index}>{item.name}/{item.score}<button className="delete-btn" onClick={(e)=>{this.store.removeMember(index);}}>X</button></div>
         });
 
-        let randomTeam = this.state.randomTeam.map((team:any,index:number)=>{
+        let randomTeam = this.store.teamList.map((team:any,index:number)=>{
             return <Team key={index} team={team} index={index}/>
         });
 
-
+        console.log('teamBoard rendered');
         return (
             <div className="vertical-buttons">
-                {!this.state.isTeamMaken?memberList:randomTeam}
-                <button onClick={this.makeTeam}>
-                    {!this.state.isTeamMaken?'팀생성':'변경'}
+                {!this.store.isTeamMaken?memberList:randomTeam}
+                <button onClick={ this.makeTeam } >
+                    {!this.store.isTeamMaken?'팀생성':'변경'}
                 </button>
-                <button onClick={(e)=>{this.props.initAll();this.makeTeam(e);}}>
+                <button onClick={(e)=>{this.props.initAll();}}>
                     초기화
                 </button>
             </div>
         );
     }
 
-    private makeTeam = (e:any)=>{
-        let randomTeam:Array<any> = [];
-        let memberList = this.props.memberList;
-        let teamCount = +this.props.teamCount;
-        let selectedTeam:Array<number> = [];
-        let team = 0;
-        if(memberList.length <= teamCount){
-            alert('팀생성을 위한 인원이 부족합니다.');
-            return;
-        }
-        this.setState( Object.assign(this.state,{isTeamMaken:!this.state.isTeamMaken}) );
-        for(let i=0; i<memberList.length; i++){
-            let man = memberList[i];
-            do{
-                team = Math.floor(Math.random()*teamCount);
-            }while(selectedTeam.indexOf(team)!==-1);
-            randomTeam[team] = randomTeam[team] || [];
-            randomTeam[team].push(man);
-            selectedTeam.push(team);
-            if(selectedTeam.length-teamCount===0){
-                selectedTeam = [];
-            }
-        }
-        this.setState(Object.assign(this.state,{randomTeam}));
+    makeTeam= (e:any)=>{
+        this.store.makeTeam(this.props.teamCount);
     }
+
+    // removeMemeber= (key:number)=>{
+    //     this.store.removeMember(key);
+    // }
 }
 
 export default TeamBaord;

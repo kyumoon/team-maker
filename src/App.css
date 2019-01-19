@@ -5,9 +5,12 @@
   list-style: none;
   margin:0;
   padding:0;
-  border-radius: 5px;
   font-family: 'Nanum Barun Gothic';
   font-weight: 400;
+}
+
+div,input,button,ul{
+  border-radius: 5px;
 }
 
 header{
@@ -26,6 +29,23 @@ header{
   background-color: rgb(218, 218, 218);
 }
 
+.member{
+  width: 90%;
+  margin:2px auto !important;
+  overflow: hidden;
+  /* float: left; */
+}
+
+.delete-btn{
+  width:10% !important;
+  padding:0 !important;
+  margin:0 !important;
+  float: right;
+  font-weight: 500;
+  color:red;
+
+}
+
 .team{
   border: 1px solid rgb(77, 75, 75);
   width:90%;
@@ -35,6 +55,10 @@ header{
 
 .team li{
   padding: 1px 0;
+}
+
+.top-boarder{
+  border-top: 1px solid black;
 }
 
 .App {

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 function Team(props:any){
     let member = props.team.map((man:any,index:number)=>{
-        return <li key={index}>{man.name}/{man.score}</li>
+        return <li className="top-boarder" key={index}>{man.name}/{man.score}</li>
     })
     return (
         <ul className="team">

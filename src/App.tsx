@@ -1,6 +1,8 @@
 import * as React from 'react';
 import './App.css';
-import TeamBaord from './components/TeamBoard'
+import {Provider} from "mobx-react";
+import TeamBaord from './components/TeamBoard';
+import teamStore from './store/TeamStore';
 
 class App extends React.Component<any, any> {
   defaultLimit = 3;
@@ -13,7 +15,6 @@ class App extends React.Component<any, any> {
       teamCount: '',
       name: '',
       score: '',
-      memberList: []
     }
   }
 
@@ -23,34 +24,38 @@ class App extends React.Component<any, any> {
         <header>
           Team-Maker
         </header>
-        <div className="vertical-buttons">
-          <input type="number"
-                 id="teamCount"
-                 next-focus="name"
-                 max={9}
-                 placeholder="팀수"
-                 onChange={this.checkAndMoveNextFoucs}
-                 onKeyDown={this.enterClick}
-                 value={this.state.teamCount} />
-          <input type="text" 
-                 id="name" 
-                 next-focus="score" 
-                 maxLength={3} 
-                 placeholder="이름" 
-                 onChange={this.checkAndMoveNextFoucs2} 
-                 onKeyDown={this.enterClick}
-                 value={this.state.name} />
-          <input type="number" 
-                 max={300} 
-                 id="score" 
-                 placeholder="점수" 
-                 next-focus="name" 
-                 onChange={this.checkAndMoveNextFoucs}
-                 onKeyDown={this.addMember}
-                 value={this.state.score} />
-          <button onClick={this.addMember}>추가</button>
-        </div>
-        <TeamBaord memberList={this.state.memberList} teamCount={this.state.teamCount} initAll={this.initAll} />
+        <Provider store={teamStore}>
+          <div>
+          <div className="vertical-buttons">
+            <input type="number"
+                  id="teamCount"
+                  next-focus="name"
+                  max={9}
+                  placeholder="팀수"
+                  onChange={this.checkAndMoveNextFoucs}
+                  onKeyDown={this.enterClick}
+                  value={this.state.teamCount} />
+            <input type="text" 
+                  id="name" 
+                  next-focus="score" 
+                  maxLength={10} 
+                  placeholder="이름" 
+                  onChange={this.checkAndMoveNextFoucs2} 
+                  onKeyDown={this.enterClick}
+                  value={this.state.name} />
+            <input type="number" 
+                  max={300} 
+                  id="score" 
+                  placeholder="점수" 
+                  next-focus="name" 
+                  onChange={this.checkAndMoveNextFoucs}
+                  onKeyDown={this.addMember}
+                  value={this.state.score} />
+            <button onClick={this.addMember}>추가</button>
+          </div>
+          <TeamBaord teamCount={this.state.teamCount} initAll={this.initAll} />
+          </div>
+        </Provider>
       </div>
     );
   }
@@ -61,8 +66,8 @@ class App extends React.Component<any, any> {
       teamCount: '',
       name: '',
       score: '',
-      memberList: []
     });
+    teamStore.initValue();
   }
 
   private enterClick = (e: any) => {
@@ -90,27 +95,14 @@ class App extends React.Component<any, any> {
         alert(`점수를 입력하세요.`);
         return;
       }
-      let name='';
-      let score='';
-      let memberList = Object.assign(this.state.memberList,{});
-      memberList.push({ name: this.state.name, score: this.state.score});
-      this.sortMemebers(memberList);
-      this.setState(Object.assign(this.state,{name,score,memberList}));
+      teamStore.addMember( { name: this.state.name, score: this.state.score} );
+      this.setState(Object.assign(this.state,{name:'',score:''}));
       this.enterClick(e);
     }
   }
 
-  private sortMemebers(memberList:Array<any>){
-    memberList.sort(
-      function(a,b){
-        return b.score - a.score;
-      }
-    );
-  }
-
   private checkAndMoveNextFoucs = (e: React.ChangeEvent<HTMLInputElement>) => {
     let target = e.target;
-    // let nextFocus = target.getAttribute("next-focus")||'';
     let id = target.getAttribute("id") || '';
     let max = parseInt(target.getAttribute("max") || '');
     let maxLength: string | number | null = target.getAttribute("maxLength");
@@ -122,7 +114,6 @@ class App extends React.Component<any, any> {
       newState[id] = value;
       this.setState(newState);
     }
-
   }
 
   private checkAndMoveNextFoucs2 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +127,6 @@ class App extends React.Component<any, any> {
       this.setState(newState);
     }
   }
-
 }
 
 
