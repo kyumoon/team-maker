@@ -95,7 +95,7 @@ class App extends React.Component<any, any> {
         alert(`점수를 입력하세요.`);
         return;
       }
-      teamStore.addMember( { name: this.state.name, score: this.state.score} );
+      teamStore.addMember( { name: this.state.name, score: +this.state.score} );
       this.setState(Object.assign(this.state,{name:'',score:''}));
       this.enterClick(e);
     }
